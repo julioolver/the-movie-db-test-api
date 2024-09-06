@@ -2,8 +2,6 @@
 
 namespace App\Domain\Entities;
 
-use Illuminate\Support\Facades\Hash;
-
 class User
 {
     private ?int $id;
