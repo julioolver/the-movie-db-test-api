@@ -22,6 +22,11 @@ class AuthenticateUser
     {
         try {
             $user = $this->userRepository->findByEmail($credentials['email']);
+
+            if (!$user) {
+                throw new AuthenticationException('User not found');
+            }
+
             $user->setPassword($credentials['password']);
 
 

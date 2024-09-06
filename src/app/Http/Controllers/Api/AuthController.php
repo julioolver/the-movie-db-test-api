@@ -9,6 +9,8 @@ use Exception;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
@@ -23,7 +25,7 @@ class AuthController extends Controller
         $this->registerUser = $registerUser;
     }
 
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): JsonResponse
     {
         try {
             $userLogin = $request->only(['email', 'password']);
@@ -32,13 +34,13 @@ class AuthController extends Controller
 
             return $this->respondWithToken($authToken);
         } catch (AuthenticationException $e) {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 401);
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], Response::HTTP_UNAUTHORIZED);
         } catch (Exception $e) {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request): JsonResponse
     {
         try {
             $user = $this->registerUser->execute($request->validated());
@@ -47,11 +49,11 @@ class AuthController extends Controller
                 'user' => $user,
             ]);
         } catch (Exception $e) {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    protected function respondWithToken($token)
+    protected function respondWithToken($token): JsonResponse
     {
         return response()->json([
             'access_token' => $token,
