@@ -18,15 +18,14 @@ class AuthenticateUser
         $this->jwtAuthService = $jwtAuthService;
     }
 
-    public function execute(array $credentials)
+    public function execute(array $credentials): string
     {
         try {
             $user = $this->userRepository->findByEmail($credentials['email']);
             $user->setPassword($credentials['password']);
 
 
-            $token = $this->jwtAuthService->generateToken($user);
-            return response()->json(['token' => $token], 200);
+            return $this->jwtAuthService->generateToken($user);
         } catch (Exception $e) {
             throw new Exception("Error in user authentication: " . $e->getMessage(), 0, $e);
         }
