@@ -2,16 +2,16 @@
 
 namespace App\Domain\UseCases\Movies;
 
-use App\Infrastructure\Providers\TheMovieDbApiProvider;
+use App\Domain\Repositories\MovieApiRepositoryInterface;
 
 class GetMoviesUseCase
 {
 
-    public function __construct(protected TheMovieDbApiProvider $theMovieDB) {}
+    public function __construct(protected MovieApiRepositoryInterface $movieProvider) {}
 
     public function execute(array $data): array
     {
-        $movies = $this->theMovieDB->searchMovies($data['query'], $data['page']);
+        $movies = $this->movieProvider->searchMovies($data['query'], $data['page']);
 
         return $movies;
     }

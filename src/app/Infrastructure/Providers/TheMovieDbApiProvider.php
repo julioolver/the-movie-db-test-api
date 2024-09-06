@@ -2,10 +2,11 @@
 
 namespace App\Infrastructure\Providers;
 
+use App\Domain\Repositories\MovieApiRepositoryInterface;
 use Exception;
 use Illuminate\Support\Facades\Http;
 
-class TheMovieDbApiProvider
+class TheMovieDbApiProvider implements MovieApiRepositoryInterface
 {
     private string $apiKey;
     private const BASE_URL = 'https://api.themoviedb.org/3/';
@@ -42,16 +43,21 @@ class TheMovieDbApiProvider
 
             $reusult = $response->json();
 
-            return [
-                'movies' => $reusult['results'],
-                'page' => [
-                    'total' => $reusult['total_pages'],
-                    'current' => $reusult['page'],
-                    'total_movies' => $reusult['total_results'],
-                ]
-            ];
+            return $this->respondMovies($reusult);
         } catch (Exception $e) {
             throw new Exception("Error retrieving movies from The Movie DB: " . $e->getMessage());
         }
+    }
+
+    public function respondMovies(array $movies): array
+    {
+        return [
+            'movies' => $movies['results'],
+            'page' => [
+                'total' => $movies['total_pages'],
+                'current' => $movies['page'],
+                'total_movies' => $movies['total_results'],
+            ]
+        ];
     }
 }
