@@ -4,11 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Domain\UseCases\Movies\GetMoviesUseCase;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Client\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
-use Illuminate\Support\Facades\Http;
 
 class MovieController extends Controller
 {
