@@ -1,0 +1,63 @@
+<?php
+
+namespace App\Infrastructure\Providers;
+
+use App\Domain\Repositories\MovieApiRepositoryInterface;
+use Exception;
+use Illuminate\Support\Facades\Http;
+
+class TheMovieDbApiProvider implements MovieApiRepositoryInterface
+{
+    private string $apiKey;
+    private const BASE_URL = 'https://api.themoviedb.org/3/';
+
+    public function __construct(protected Http $client)
+    {
+        $this->apiKey = config('services.themoviedb.api_key');
+    }
+
+    /**
+     * Search movies by query using The Movie DB API.
+     *
+     * @param string $query
+     * @param int $page
+     * @return array
+     * @throws Exception
+     */
+    public function searchMovies(string $query, int $page = 1): array
+    {
+        try {
+            $response = $this->client::withHeaders([
+                'Authorization' => 'Bearer ' . $this->apiKey,
+                'accept' => 'application/json',
+            ])->get(self::BASE_URL . 'search/movie', [
+                'query' => $query,
+                'page' => $page,
+                'include_adult' => false,
+                'language' => 'pt-BR',
+            ]);
+
+            if ($response->failed()) {
+                throw new Exception($response->body());
+            }
+
+            $reusult = $response->json();
+
+            return $this->respondMovies($reusult);
+        } catch (Exception $e) {
+            throw new Exception("Error retrieving movies from The Movie DB: " . $e->getMessage());
+        }
+    }
+
+    public function respondMovies(array $movies): array
+    {
+        return [
+            'movies' => $movies['results'],
+            'page' => [
+                'total' => $movies['total_pages'],
+                'current' => $movies['page'],
+                'total_movies' => $movies['total_results'],
+            ]
+        ];
+    }
+}

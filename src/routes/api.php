@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\MovieController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,3 +20,9 @@ Route::group([
 });
 
 Route::post('/auth/register', [AuthController::class, 'register']);
+
+Route::group([
+    'prefix' => 'movies'
+], function ($router) {
+    Route::get('/', [MovieController::class, 'index']);
+});
