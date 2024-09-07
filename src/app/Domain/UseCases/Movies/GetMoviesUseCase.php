@@ -12,7 +12,6 @@ class GetMoviesUseCase
 
     public function execute(array $data): array
     {
-        $movies = $this->movieProvider->searchMovies($data['query'], $data['page']);
         $persistedMovies = $this->movieRepository->getPersistedMoviesForUser();
 
         $persistedMoviesMap = [];
@@ -24,15 +23,8 @@ class GetMoviesUseCase
             ];
         }
 
-        $moviesMap = array_map(function ($movie) use ($persistedMoviesMap) {
-            $persistedStatus = $persistedMoviesMap[$movie['external_id']] ?? [];
+        $movies = $this->movieProvider->searchMovies($data['query'], $data['page'], $persistedMoviesMap);
 
-            return [
-                ...$movie,
-                ...$persistedStatus
-            ];
-        }, $movies['movies']);
-
-        return $moviesMap;
+        return $movies;
     }
 }

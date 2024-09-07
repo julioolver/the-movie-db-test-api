@@ -24,7 +24,7 @@ class TheMovieDbApiProvider implements MovieApiRepositoryInterface
      * @return array
      * @throws Exception
      */
-    public function searchMovies(string $query, int $page = 1): array
+    public function searchMovies(string $query, int $page = 1, array $persistedMovies = []): array
     {
         try {
             $response = $this->client::withHeaders([
@@ -43,15 +43,17 @@ class TheMovieDbApiProvider implements MovieApiRepositoryInterface
 
             $reusult = $response->json();
 
-            return $this->respondMovies($reusult);
+            return $this->respondMovies($reusult, $persistedMovies);
         } catch (Exception $e) {
             throw new Exception("Error retrieving movies from The Movie DB: " . $e->getMessage());
         }
     }
 
-    public function respondMovies(array $movies): array
+    public function respondMovies(array $movies, array $persistedMovies = []): array
     {
-        $moviesMap = array_map(function ($movie) {
+        $moviesMap = array_map(function ($movie) use ($persistedMovies) {
+            $persistedStatus = $persistedMovies[$movie['id']] ?? [];
+
             return [
                 'external_id' => $movie['id'],
                 'title' => $movie['title'],
@@ -64,6 +66,7 @@ class TheMovieDbApiProvider implements MovieApiRepositoryInterface
                 'poster_path' => 'https://image.tmdb.org/t/p/w500' . $movie['poster_path'],
                 // $movie['director'] => $movie['original_title'];
                 // $movie['duration'] => $movie['runtime'];
+                ...$persistedStatus
             ];
         }, $movies['results']);
 
