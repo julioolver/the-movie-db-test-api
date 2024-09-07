@@ -51,8 +51,24 @@ class TheMovieDbApiProvider implements MovieApiRepositoryInterface
 
     public function respondMovies(array $movies): array
     {
+        $moviesMap = array_map(function ($movie) {
+            return [
+                'external_id' => $movie['id'],
+                'title' => $movie['title'],
+                'provider' => 'the-movie-db',
+                'synopsis' => $movie['overview'],
+                'year' => $movie['release_date'],
+                'watched' => false,
+                'favorite' => false,
+                'watch_later' => false,
+                'poster_path' => 'https://image.tmdb.org/t/p/w500' . $movie['poster_path'],
+                // $movie['director'] => $movie['original_title'];
+                // $movie['duration'] => $movie['runtime'];
+            ];
+        }, $movies['results']);
+
         return [
-            'movies' => $movies['results'],
+            'movies' => $moviesMap,
             'page' => [
                 'total' => $movies['total_pages'],
                 'current' => $movies['page'],

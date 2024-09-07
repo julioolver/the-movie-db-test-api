@@ -7,6 +7,7 @@ use App\Domain\Entities\User;
 use App\Domain\Repositories\MovieRepositoryInterface;
 use App\Infrastructure\Persistence\BaseEloquentRepository;
 use App\Models\Movie as MovieEloquent;
+use Illuminate\Support\Facades\Auth;
 
 class MovieEloquentRepository extends BaseEloquentRepository implements MovieRepositoryInterface
 {
@@ -57,5 +58,14 @@ class MovieEloquentRepository extends BaseEloquentRepository implements MovieRep
         $movie = $this->findEloquentModelById($movie->getId());
 
         $movie->users()->attach($user->getId(), $status);
+    }
+
+    function getPersistedMoviesForUser()
+    {
+        $user = Auth::user();
+
+        $persistedMovies = $user->movies()->get();
+
+        return $persistedMovies;
     }
 }
