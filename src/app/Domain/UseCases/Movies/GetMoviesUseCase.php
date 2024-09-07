@@ -3,16 +3,24 @@
 namespace App\Domain\UseCases\Movies;
 
 use App\Domain\Repositories\MovieApiRepositoryInterface;
+use App\Infrastructure\Cache\MovieCacheService;
 use App\Infrastructure\Persistence\Movie\MovieEloquentRepository;
+use Illuminate\Support\Facades\Auth;
 
 class GetMoviesUseCase
 {
 
-    public function __construct(protected MovieApiRepositoryInterface $movieProvider, protected MovieEloquentRepository $movieRepository) {}
+    public function __construct(
+        protected MovieApiRepositoryInterface $movieProvider,
+        protected MovieEloquentRepository $movieRepository,
+        protected MovieCacheService $movieCacheService
+    ) {}
 
     public function execute(array $data): array
     {
-        $persistedMovies = $this->movieRepository->getPersistedMoviesForUser();
+        $user = Auth::user();
+
+        $persistedMovies = $this->movieCacheService->getUserMoviesFromCache($user->id, fn() => $this->movieRepository->getPersistedMoviesForUser($user));
 
         $persistedMoviesMap = [];
         foreach ($persistedMovies as $movie) {
