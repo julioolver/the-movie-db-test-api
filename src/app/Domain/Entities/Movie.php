@@ -41,6 +41,11 @@ class Movie
         return $this->id;
     }
 
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function getExternalId(): string
     {
         return $this->externalId;
@@ -79,5 +84,20 @@ class Movie
     public function getPosterPath(): ?string
     {
         return $this->posterPath;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'external_id' => $this->externalId,
+            'provider' => $this->provider,
+            'title' => $this->title,
+            'director' => $this->director,
+            'synopsis' => $this->synopsis,
+            'duration' => $this->duration,
+            'year' => $this->year,
+            'poster_path' => $this->posterPath
+        ];
     }
 }
