@@ -10,7 +10,13 @@ use App\Models\Movie as MovieEloquent;
 
 class MovieEloquentRepository extends BaseEloquentRepository implements MovieRepositoryInterface
 {
-    public function __construct(protected MovieEloquent $movieEloquent) {}
+    protected MovieEloquent $eloquentModel;
+
+    public function __construct(MovieEloquent $eloquentModel)
+    {
+        $this->eloquentModel = $eloquentModel;
+        parent::__construct($eloquentModel);
+    }
 
     public function findById(int $id): ?Movie
     {
@@ -21,15 +27,27 @@ class MovieEloquentRepository extends BaseEloquentRepository implements MovieRep
 
     public function findByExternalId(string $externalId): ?Movie
     {
-        return $this->movieEloquent->where('external_id', $externalId)->first();
+        $movie = $this->eloquentModel->where('external_id', $externalId)->first();
+
+        return $movie ? new Movie(
+            id: $movie->id,
+            externalId: $movie->external_id,
+            provider: $movie->provider,
+            title: $movie->title,
+            director: $movie->director,
+            synopsis: $movie->synopsis,
+            duration: $movie->duration,
+            year: $movie->year,
+            posterPath: $movie->poster_path
+        ) : null;
     }
     public function findByTitle(string $title): ?Movie
     {
-        return $this->movieEloquent->where('title', $title)->first();
+        return $this->eloquentModel->where('title', $title)->first();
     }
     public function create(Movie $movie): Movie
     {
-        $newMovie = $this->movieEloquent->create($movie->toArray());
+        $newMovie = $this->eloquentModel->create($movie->toArray());
         $movie->setId($newMovie->id);
 
         return $movie;
