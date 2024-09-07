@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('duration')->nullable();
             $table->integer('year')->nullable();
             $table->string('poster_path')->nullable();
+            $table->timestamps();
         });
     }
 
