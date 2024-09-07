@@ -25,4 +25,5 @@ Route::group([
     'prefix' => 'movies'
 ], function ($router) {
     Route::get('/', [MovieController::class, 'index']);
+    Route::post('/', [MovieController::class, 'store']);
 });

@@ -6,24 +6,30 @@ use App\Domain\Repositories\UserRepositoryInterface;
 use App\Domain\Entities\User;
 use App\Models\User as EloquentUser;
 
-class UserRepository implements UserRepositoryInterface
+class UserRepository extends BaseEloquentRepository implements UserRepositoryInterface
 {
-    private EloquentUser $model;
+    private EloquentUser $eloquentModel;
 
-    public function __construct(EloquentUser $model)
+    public function __construct(EloquentUser $eloquentModel)
     {
-        $this->model = $model;
+        $this->eloquentModel = $eloquentModel;
+    }
+
+    public function findById(int $id): ?User
+    {
+        $user = $this->eloquentModel->find($id);
+        return $user ? new User($user->id, $user->name, $user->email, $user->password) : null;
     }
 
     public function findByEmail(string $email): ?User
     {
-        $user = $this->model->where('email', $email)->first();
+        $user = $this->eloquentModel->where('email', $email)->first();
         return $user ? new User($user->id, $user->name, $user->email, $user->password) : null;
     }
 
     public function create(User $user): User
     {
-        $newUser = $this->model->create([
+        $newUser = $this->eloquentModel->create([
             'name' => $user->getName(),
             'email' => $user->getEmail(),
             'password' => $user->getPassword(),
