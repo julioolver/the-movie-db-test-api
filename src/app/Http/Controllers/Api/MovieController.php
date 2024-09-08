@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Domain\UseCases\Movies\CreateMovieStatusUseCase;
-use App\Domain\UseCases\Movies\GetMoviesUseCase;
+use App\Domain\UseCases\Movie\CreateMovieStatusUseCase;
+use App\Domain\UseCases\Movie\GetMoviesUseCase;
 use App\Dtos\UpdateMovieStatusDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Movie\StoreMovieRequest;

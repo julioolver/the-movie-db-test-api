@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\UseCases\Movies;
+namespace App\Domain\UseCases\Movie;
 
 use App\Domain\Entities\Movie;
 use App\Domain\Repositories\MovieRepositoryInterface;

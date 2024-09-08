@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\UseCases\Movies;
+namespace App\Domain\UseCases\Movie;
 
 use App\Domain\Repositories\MovieApiRepositoryInterface;
 use App\Infrastructure\Cache\MovieCacheService;

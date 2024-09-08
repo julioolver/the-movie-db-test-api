@@ -5,7 +5,7 @@ namespace Tests\Unit\Movie;
 use App\Domain\Entities\User;
 use App\Domain\Repositories\MovieRepositoryInterface;
 use App\Domain\Repositories\UserRepositoryInterface;
-use App\Domain\UseCases\Movies\CreateMovieStatusUseCase;
+use App\Domain\UseCases\Movie\CreateMovieStatusUseCase;
 use App\Dtos\UpdateMovieStatusDto;
 use App\Infrastructure\Cache\MovieCacheService;
 use App\Models\Movie;
