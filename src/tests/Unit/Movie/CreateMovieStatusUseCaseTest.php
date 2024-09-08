@@ -7,6 +7,7 @@ use App\Domain\Repositories\MovieRepositoryInterface;
 use App\Domain\Repositories\UserRepositoryInterface;
 use App\Domain\UseCases\Movies\CreateMovieStatusUseCase;
 use App\Dtos\UpdateMovieStatusDto;
+use App\Infrastructure\Cache\MovieCacheService;
 use App\Models\Movie;
 use Illuminate\Support\Facades\Auth;
 use Mockery;
@@ -17,6 +18,7 @@ class CreateMovieStatusUseCaseTest extends TestCase
     protected MovieRepositoryInterface $movieRepository;
     protected UserRepositoryInterface $userRepository;
     protected CreateMovieStatusUseCase $useCase;
+    protected MovieCacheService $movieCacheService;
 
     protected function setUp(): void
     {
@@ -24,10 +26,12 @@ class CreateMovieStatusUseCaseTest extends TestCase
 
         $this->movieRepository = Mockery::mock(MovieRepositoryInterface::class);
         $this->userRepository = Mockery::mock(UserRepositoryInterface::class);
+        $this->movieCacheService = Mockery::mock(MovieCacheService::class);
 
         $this->useCase = new CreateMovieStatusUseCase(
             $this->movieRepository,
-            $this->userRepository
+            $this->userRepository,
+            $this->movieCacheService
         );
     }
 
@@ -75,6 +79,11 @@ class CreateMovieStatusUseCaseTest extends TestCase
                 'favorite' => $dto->isFavorite,
                 'watch_later' => $dto->watchLater
             ]);
+
+        $this->movieCacheService
+            ->shouldReceive('clearUserMoviesCache')
+            ->once()
+            ->with(7);
 
         $this->useCase->execute($dto);
 

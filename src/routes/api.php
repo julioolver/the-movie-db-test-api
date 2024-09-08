@@ -22,6 +22,7 @@ Route::group([
 Route::post('/auth/register', [AuthController::class, 'register']);
 
 Route::group([
+    'middleware' => ['api', 'auth:api'],
     'prefix' => 'movies'
 ], function ($router) {
     Route::get('/', [MovieController::class, 'index']);

@@ -28,7 +28,6 @@ class MovieCacheService
         Cache::forget($cacheKey);
     }
 
-
     public function clearMoviesApiCacheForSearchTerm($serchTerm)
     {
         foreach (range(1, 10) as $page) {
