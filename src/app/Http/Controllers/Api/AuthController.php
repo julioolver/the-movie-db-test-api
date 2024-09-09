@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Domain\UseCases\AuthenticateUser;
-use App\Domain\UseCases\RegisterUser;
+use App\Domain\UseCases\User\AuthenticateUser;
+use App\Domain\UseCases\User\RegisterUser;
 use Illuminate\Auth\AuthenticationException;
 use Exception;
 use App\Http\Controllers\Controller;

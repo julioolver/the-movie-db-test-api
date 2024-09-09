@@ -60,10 +60,8 @@ class MovieEloquentRepository extends BaseEloquentRepository implements MovieRep
         $movie->users()->attach($user->getId(), $status);
     }
 
-    function getPersistedMoviesForUser()
+    function getPersistedMoviesForUser($user)
     {
-        $user = Auth::user();
-
         $persistedMovies = $user->movies()->get();
 
         return $persistedMovies;

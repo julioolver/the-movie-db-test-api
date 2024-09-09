@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Domain\UseCases\Movies;
+namespace App\Domain\UseCases\Movie;
 
 use App\Domain\Entities\Movie;
 use App\Domain\Repositories\MovieRepositoryInterface;
 use App\Domain\Repositories\UserRepositoryInterface;
 use App\Dtos\UpdateMovieStatusDto;
+use App\Infrastructure\Cache\MovieCacheService;
 use Illuminate\Support\Facades\Auth;
 
 class CreateMovieStatusUseCase
@@ -14,6 +15,7 @@ class CreateMovieStatusUseCase
     public function __construct(
         protected MovieRepositoryInterface $movieRepository,
         protected UserRepositoryInterface $userRepository,
+        protected MovieCacheService $movieCacheService
     ) {}
 
     /**
@@ -55,5 +57,7 @@ class CreateMovieStatusUseCase
             'favorite' => $dto->isFavorite,
             'watch_later' => $dto->watchLater
         ]);
+
+        $this->movieCacheService->clearUserMoviesCache($user->getId());
     }
 }

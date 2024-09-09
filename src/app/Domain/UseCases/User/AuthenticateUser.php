@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\UseCases;
+namespace App\Domain\UseCases\User;
 
 use App\Domain\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Security\JwtAuthService;
