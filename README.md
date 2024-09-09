@@ -66,7 +66,7 @@ Para facilitar os testes dos endpoints, você pode importar a collection do Inso
 
 ### Instruções para Importar:
 
-1. Baixe a [Collection do Insomnia](/home/julio/Documentos/Insomnia_2024-09-09_the_movie_db.json).
+1. Baixe a [Collection do Insomnia](./docs/Insomnia_2024-09-09_the_movie_db.json).
 2. Abra o Insomnia e vá até o menu **Application** > **Preferences** > **Data** > **Import Data** > **From File**.
 3. Selecione o arquivo `filmes-collection.json` que você acabou de baixar.
 4. Após importar, você terá acesso a todos os endpoints e exemplos de requisições já configurados para testar a API.
