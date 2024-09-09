@@ -1,68 +1,79 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Projeto para Integração com APIs de Filmes - PHP e Laravel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este projeto Laravel é uma aplicação web desenvolvida para permitir que os usuários pesquisem e interajam com títulos de filmes, integrando APIs externas como **The Movie DB**. O objetivo é possibilitar a pesquisa de filmes, marcação de status (Assistido, Favorito, Pretende Assistir) e exibição de detalhes dos filmes, utilizando boas práticas de design e arquitetura como **SOLID**, **Clean Architecture**, **Repositories**, **DTOs**, e **Adapters**.
 
-## About Laravel
+O sistema foi desenhado para ser flexível, possibilitando a adição de múltiplos provedores de API de filmes. A arquitetura implementada segue o padrão **Ports and Adapters (Hexagonal Architecture)**, garantindo que a lógica de negócios permaneça desacoplada dos provedores externos.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Estrutura do Projeto
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Camadas e Diretórios
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Dentro do diretório `app/`, o projeto está organizado da seguinte forma:
 
-## Learning Laravel
+- **Domain**:
+  - **Entities**: Representa as entidades de domínio, como o `Movie` e `User`, que contêm apenas dados relevantes ao negócio e são agnósticas a frameworks.
+  - **Repositories**: Define interfaces para os repositórios, aplicando o princípio da inversão de dependência (SOLID).
+  - **UseCases**: Contém a lógica de negócios (como a criação de status de filmes, obtenção de filmes por usuário, etc.) e é responsável por orquestrar as ações do sistema.
+  
+- **Infrastructure**:
+  - **Persistence**:
+    - **Repositories**: Implementações dos repositórios utilizando Eloquent ORM para interagir com o banco de dados.
+  - **Providers**: Integrações com APIs externas como **The Movie DB**. Cada integração possui seu Adapter e implementação correspondente ao contrato definido na camada de **Domain**.
+  - **Cache**: Implementações de camada de cache, para evitar consultas desencessárias ao banco de dados, melhorando assim o desempenho da aplicação.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **DTO (Data Transfer Objects)**: Utilizados para transportar dados entre as camadas da aplicação, mantendo a integridade e padronização das informações.
+- **Adapters**: Adapta a entrada e saída de dados entre a aplicação e os provedores externos, garantindo que a lógica de negócio não dependa de detalhes da implementação externa.
+  
+- **Tests**:
+  - **Unitários**: Alguns testes para validar a lógica de negócios e interações entre as camadas internas, como UseCases.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Componentes principais:
 
-## Laravel Sponsors
+- **UseCases**:
+  - `CreateMovieStatusUseCase`: Responsável por criar ou atualizar o status de um filme associado a um usuário.
+  - `GetUserMoviesUseCase`: Obtém a lista de filmes associados ao usuário e seus respectivos status.
+  - `GetMovieDetailsUseCase`: Busca detalhes extras de um filme através da integração com APIs externas, caso necessário.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **Adapters e Integrações**:
+  - **TheMovieDbApiProvider**: Adapter responsável pela integração com a API do The Movie DB. Ele implementa a interface `MovieApiRepositoryInterface` e adapta a resposta da API para o formato esperado pelo sistema.
+  - O sistema foi construído de forma a permitir a adição de novos provedores de API, bastando implementar a interface de `MovieApiRepositoryInterface`.
 
-### Premium Partners
+### Padrões Utilizados:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- **Clean Architecture**: A lógica de negócios foi isolada em **UseCases**, e a comunicação com as infraestruturas externas, como APIs e banco de dados, é feita através de **Adapters** e **Repositories**, garantindo que o núcleo do sistema seja independente.
+  
+- **SOLID**: Todos os componentes seguem os princípios SOLID, garantindo baixo acoplamento, alta coesão e facilidade de manutenção e extensibilidade.
 
-## Contributing
+- **DTOs (Data Transfer Objects)**: Utilizados para transportar dados entre as camadas de forma padronizada.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Repository Pattern**: Padrão de repositório foi utilizado para abstrair o acesso a dados. Isso permite a troca de implementação de persistência sem impacto na lógica de negócios.
 
-## Code of Conduct
+### Configuração e Instalação
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+#### Pré-requisitos
 
-## Security Vulnerabilities
+1. **Docker** e **Docker Compose** instalados.
+2. **Chave de API** do **The Movie DB** ou outro provedor de filmes.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+#### Instalação
 
-## License
+Siga os passos abaixo para configurar o ambiente localmente:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. Atualize o `.env` e preencha as variáveis de ambiente necessárias, como a chave da API para o **The Movie DB**.
 
--- Gerar o jwt secret no env: php artisan jwt:secret
+2. Execute os comandos para instalar as dependências e rodar o ambiente com Docker:
+
+```bash
+cp docker-compose up --build 
+```
+
+#### Executando a Aplicação
+- Após a instalação e configuração, a aplicação estará disponível em:
+
+```bash
+http://localhost:8088
+```
+
+#### Autor
+- Julio Cesar Oliveira da Silva
