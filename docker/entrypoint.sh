@@ -17,10 +17,9 @@ if [ ! -f composer.json ]; then
   php artisan key:generate
 fi
 
-php artisan key:generate
-
 
 composer install --optimize-autoloader
+php artisan key:generate
 php artisan migrate
 
 echo "Adjusting permissions for storage and bootstrap/cache"
