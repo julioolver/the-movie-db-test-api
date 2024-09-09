@@ -24,9 +24,9 @@ class CreateMovieStatusUseCase
      * @return void
      */
 
-    public function execute(UpdateMovieStatusDto $dto): void
+    public function execute(UpdateMovieStatusDto $dto)
     {
-        $user = $this->userRepository->findById(7); //Auth::id()
+        $user = $this->userRepository->findById(Auth::id());
 
         if (!$user) {
             throw new \Exception('User not found');
@@ -52,12 +52,14 @@ class CreateMovieStatusUseCase
             )
         );
 
-        $this->movieRepository->createUserMovieStatus($user, $movie, [
-            'watched' => $dto->isWatched,
-            'favorite' => $dto->isFavorite,
+        $createdMovie = $this->movieRepository->createUserMovieStatus($user, $movie, [
+            'watched' => $dto->watched,
+            'favorite' => $dto->favorite,
             'watch_later' => $dto->watchLater
         ]);
 
         $this->movieCacheService->clearUserMoviesCache($user->getId());
+
+        return $createdMovie;
     }
 }

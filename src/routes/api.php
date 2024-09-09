@@ -15,8 +15,8 @@ Route::group([
 ], function ($router) {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('logout', 'AuthController@logout');
-    Route::post('refresh', 'AuthController@refresh');
-    Route::post('me', 'AuthController@me');
+    Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::get('me', [AuthController::class, 'me']);
 });
 
 Route::post('/auth/register', [AuthController::class, 'register']);
@@ -27,4 +27,5 @@ Route::group([
 ], function ($router) {
     Route::get('/', [MovieController::class, 'index']);
     Route::post('/', [MovieController::class, 'store']);
+    Route::put('{movie}/status', [MovieController::class, 'updateStatus']);
 });

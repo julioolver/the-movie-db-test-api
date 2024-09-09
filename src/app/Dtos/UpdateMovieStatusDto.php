@@ -10,10 +10,10 @@ class UpdateMovieStatusDto
     public ?string $director;
     public ?string $synopsis;
     public ?int $duration;
-    public ?int $year;
+    public ?string $year;
     public ?string $posterPath;
-    public bool $isWatched;
-    public bool $isFavorite;
+    public bool $watched;
+    public bool $favorite;
     public bool $watchLater;
 
     public function __construct(
@@ -23,10 +23,10 @@ class UpdateMovieStatusDto
         ?string $director,
         ?string $synopsis,
         ?int $duration,
-        ?int $year,
+        ?string $year,
         ?string $posterPath,
-        bool $isWatched,
-        bool $isFavorite,
+        bool $watched,
+        bool $favorite,
         bool $watchLater
     ) {
         $this->externalId = $externalId;
@@ -37,8 +37,8 @@ class UpdateMovieStatusDto
         $this->duration = $duration;
         $this->year = $year;
         $this->posterPath = $posterPath;
-        $this->isWatched = $isWatched;
-        $this->isFavorite = $isFavorite;
+        $this->watched = $watched;
+        $this->favorite = $favorite;
         $this->watchLater = $watchLater;
     }
 }

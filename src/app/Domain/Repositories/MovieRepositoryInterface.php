@@ -11,5 +11,6 @@ interface MovieRepositoryInterface
     public function findByExternalId(string $externalId): ?Movie;
     public function findByTitle(string $title): ?Movie;
     public function create(Movie $movie): Movie;
-    public function createUserMovieStatus(User $user, Movie $movie, array $status): void;
+    public function updateUserMovieStatus(User $user, Movie $movie, array $status): void;
+    public function createUserMovieStatus(User $user, Movie $movie, array $status);
 }
