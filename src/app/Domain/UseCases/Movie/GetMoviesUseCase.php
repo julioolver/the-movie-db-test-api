@@ -24,11 +24,11 @@ class GetMoviesUseCase
 
         $persistedMoviesMap = [];
         foreach ($persistedMovies as $movie) {
-            $persistedMoviesMap[$movie->external_id] = [
-                'watched' => $movie->pivot->watched,
-                'favorite' => $movie->pivot->favorite,
-                'watch_later' => $movie->pivot->watch_later,
-                'internal_id' => $movie->id,
+            $persistedMoviesMap[$movie['external_id']] = [
+                'watched' => $movie['watched'],
+                'favorite' => $movie['favorite'],
+                'watch_later' => $movie['watch_later'],
+                'internal_id' => $movie['id'],
                 'in_db' => true
             ];
         }
