@@ -67,6 +67,12 @@ class MovieEloquentRepository extends BaseEloquentRepository implements MovieRep
     {
         $movie = $this->findEloquentModelById($movie->getId());
 
+        if (!$status['watched'] && !$status['favorite'] && !$status['watch_later']) {
+            $movie->users()->detach($user->getId());
+
+            return;
+        }
+
         $movie->users()->syncWithoutDetaching([
             $user->getId() => $status
         ]);
@@ -88,7 +94,9 @@ class MovieEloquentRepository extends BaseEloquentRepository implements MovieRep
         return $persistedMovies->map(function ($movie) {
             return [
                 'id' => $movie->id,
+                'internal_id' => $movie->id,
                 'external_id' => $movie->external_id,
+                'provider' => $movie->provider,
                 'title' => $movie->title,
                 'poster_path' => $movie->poster_path,
                 'director' => $movie->director,
