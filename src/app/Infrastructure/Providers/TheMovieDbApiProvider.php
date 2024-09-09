@@ -80,4 +80,60 @@ class TheMovieDbApiProvider implements MovieApiRepositoryInterface
             ]
         ];
     }
+
+    public function providesFullMovieDetails(): bool
+    {
+        // TMDB não fornece todos os detalhes diretamente na lista de filmes, então retorna falso para ser adaptado a outra integração
+        return false;
+    }
+
+    public function getMovieDetails(string $externalId): array
+    {
+        try {
+            $response = $this->client::withHeaders([
+                'Authorization' => 'Bearer ' . $this->apiKey,
+                'accept' => 'application/json',
+            ])->get(self::BASE_URL . "movie/{$externalId}", [
+                'language' => 'pt-BR',
+            ]);
+
+            // Extrai os detalhes do filme
+            $movie = $response->json();
+
+            $creditsResponse = $this->client::withHeaders([
+                'Authorization' => 'Bearer ' . $this->apiKey,
+                'accept' => 'application/json',
+            ])->get(self::BASE_URL . "movie/{$externalId}/credits");
+
+            if ($creditsResponse->failed()) {
+                throw new Exception($creditsResponse->body());
+            }
+
+            $credits = $creditsResponse->json();
+            $director = $this->extractDirector($credits);
+
+            // Retorna os detalhes completos do filme
+            return [
+                'external_id' => $movie['id'],
+                'title' => $movie['title'],
+                'synopsis' => $movie['overview'],
+                'duration' => $movie['runtime'],
+                'year' => $movie['release_date'],
+                'director' => $director
+            ];
+        } catch (Exception $e) {
+            throw new Exception("Error retrieving movie details from The Movie DB: " . $e->getMessage());
+        }
+    }
+
+    private function extractDirector(array $credits): string
+    {
+        foreach ($credits['crew'] as $crewMember) {
+            if ($crewMember['job'] === 'Director') {
+                return $crewMember['name'];
+            }
+        }
+
+        return 'Diretor Desconhecido';
+    }
 }

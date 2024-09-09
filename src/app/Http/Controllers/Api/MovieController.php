@@ -96,4 +96,22 @@ class MovieController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function getMovieDetails(string $id): JsonResponse
+    {
+        try {
+            $movie = $this->getMovieDetailsUseCase->execute($id);
+
+            return response()->json([
+                'title' => $movie->getTitle(),
+                'director' => $movie->getDirector(),
+                'synopsis' => $movie->getSynopsis(),
+                'duration' => $movie->getDuration(),
+                'year' => $movie->getYear(),
+                'posterPath' => $movie->getPosterPath(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Movie not found'], 404);
+        }
+    }
 }

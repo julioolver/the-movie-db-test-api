@@ -28,6 +28,7 @@ Route::group([
     Route::get('/', [MovieController::class, 'index']);
     Route::post('/', [MovieController::class, 'store']);
     Route::put('{movie}/status', [MovieController::class, 'updateStatus']);
+    Route::get('/movies/{id}', [MovieController::class, 'getMovieDetails']);
 });
 
 Route::middleware('auth:api')->group(function () {

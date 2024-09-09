@@ -3,6 +3,7 @@
 namespace App\Domain\UseCases\Movie;
 
 use App\Domain\Entities\Movie;
+use App\Domain\Repositories\MovieApiRepositoryInterface;
 use App\Domain\Repositories\MovieRepositoryInterface;
 use App\Domain\Repositories\UserRepositoryInterface;
 use App\Dtos\UpdateMovieStatusDto;
@@ -15,7 +16,8 @@ class CreateMovieStatusUseCase
     public function __construct(
         protected MovieRepositoryInterface $movieRepository,
         protected UserRepositoryInterface $userRepository,
-        protected MovieCacheService $movieCacheService
+        protected MovieCacheService $movieCacheService,
+        protected MovieApiRepositoryInterface $movieProvider
     ) {}
 
     /**
@@ -36,6 +38,14 @@ class CreateMovieStatusUseCase
 
         if ($movie) {
             throw new \Exception('Movie already exists');
+        }
+
+        if (!$this->movieProvider->providesFullMovieDetails()) {
+            $movieDetails = $this->movieProvider->getMovieDetails($dto->externalId);
+
+            $dto->director = $movieDetails['director'];
+            $dto->synopsis = $movieDetails['synopsis'];
+            $dto->duration = $movieDetails['duration'];
         }
 
         $movie = $this->movieRepository->create(
