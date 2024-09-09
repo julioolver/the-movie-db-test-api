@@ -60,13 +60,28 @@ Dentro do diretório `app/`, o projeto está organizado da seguinte forma:
 
 Siga os passos abaixo para configurar o ambiente localmente:
 
-1. Atualize o `.env` e preencha as variáveis de ambiente necessárias, como a chave da API para o **The Movie DB**.
-
-2. Execute os comandos para instalar as dependências e rodar o ambiente com Docker:
+1. Clone o repositório:
 
 ```bash
-cp docker-compose up --build 
+git clone https://github.com/julioolver/the-movie-db-test-api.git
 ```
+
+```bash
+cd the-movie-db-test-api
+```
+
+
+1. Execute os comandos para instalar as dependências e rodar o ambiente com Docker:
+
+```bash
+docker compose up --build
+
+ou
+
+docker-compose up --build
+```
+
+2. Atualize o `.env` e preencha as variáveis de ambiente necessárias, como a chave da API para o **The Movie DB**: THE_MOVIE_DB_API_KEY (deixei a minha como exemplo, caso não tenham cadastro na plataforma).
 
 #### Executando a Aplicação
 - Após a instalação e configuração, a aplicação estará disponível em:
