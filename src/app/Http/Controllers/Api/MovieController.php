@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Domain\UseCases\Movie\CreateMovieStatusUseCase;
 use App\Domain\UseCases\Movie\GetMoviesUseCase;
 use App\Domain\UseCases\Movie\updateMovieStatusUseCase;
+use App\Domain\UseCases\Movie\GetUserMoviesUseCase;
 use App\Dtos\UpdateMovieStatusDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Movie\StoreMovieRequest;
@@ -18,7 +19,8 @@ class MovieController extends Controller
     public function __construct(
         protected GetMoviesUseCase $getMoviesUseCase,
         protected CreateMovieStatusUseCase $createMovieStatusUseCase,
-        protected updateMovieStatusUseCase $updateUserMovieStatusUseCase
+        protected updateMovieStatusUseCase $updateUserMovieStatusUseCase,
+        protected GetUserMoviesUseCase $getUserMoviesUseCase
     ) {}
 
     public function index(Request $request): JsonResponse
@@ -81,6 +83,17 @@ class MovieController extends Controller
             return response()->json(['message' => $th->getMessage()], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function getUserMovies(): JsonResponse
+    {
+        try {
+            $movies = $this->getUserMoviesUseCase->execute();
+
+            return response()->json(['movies' => $movies]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }

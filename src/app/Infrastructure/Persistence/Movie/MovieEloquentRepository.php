@@ -85,6 +85,20 @@ class MovieEloquentRepository extends BaseEloquentRepository implements MovieRep
     {
         $persistedMovies = $user->movies()->get();
 
-        return $persistedMovies;
+        return $persistedMovies->map(function ($movie) {
+            return [
+                'id' => $movie->id,
+                'external_id' => $movie->external_id,
+                'title' => $movie->title,
+                'poster_path' => $movie->poster_path,
+                'director' => $movie->director,
+                'synopsis' => $movie->synopsis,
+                'duration' => $movie->duration,
+                'year' => $movie->year,
+                'watched' => $movie->pivot->watched ?? false,
+                'favorite' => $movie->pivot->favorite ?? false,
+                'watch_later' => $movie->pivot->watch_later ?? false,
+            ];
+        })->toArray();
     }
 }
