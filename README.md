@@ -75,6 +75,14 @@ Aqui estão os principais endpoints da API:
 - **POST /api/movies**: Adiciona um novo filme.
 - **PUT /api/movies/{id}/status**: Atualiza o status do filme (assistido, favorito, etc.).
 
+## Swagger da aplicação
+
+basta acessar após subir a aplicação:
+
+```bash
+http://localhost:8088/api/documentation#/
+```
+
 ## Importar Collection do Insomnia
 
 Para facilitar os testes dos endpoints, você pode importar a collection do Insomnia fornecida.
