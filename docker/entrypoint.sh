@@ -17,9 +17,8 @@ if [ ! -f composer.json ]; then
   php artisan key:generate
 fi
 
-if ! grep -q "^APP_KEY=" /var/www/.env; then
-    php artisan key:generate
-fi
+php artisan key:generate
+
 
 composer install --optimize-autoloader
 php artisan migrate
