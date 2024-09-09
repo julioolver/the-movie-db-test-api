@@ -4,6 +4,21 @@ Este projeto Laravel é uma aplicação web desenvolvida para permitir que os us
 
 O sistema foi desenhado para ser flexível, possibilitando a adição de múltiplos provedores de API de filmes. A arquitetura implementada segue o padrão **Ports and Adapters (Hexagonal Architecture)**, garantindo que a lógica de negócios permaneça desacoplada dos provedores externos.
 
+## O que foi utilizado
+- Docker
+- PHP 8.3
+- Laravel 11
+- PostgreSQL
+- API REST
+- JWT AUTH
+- CACHE
+- Clean Architecture
+- Clean code
+- Object Calisthenics
+- SOLID
+- DRY
+- Github Issues, para controle de features
+
 ## Estrutura do Projeto
 
 ### Camadas e Diretórios
@@ -11,7 +26,7 @@ O sistema foi desenhado para ser flexível, possibilitando a adição de múltip
 Dentro do diretório `app/`, o projeto está organizado da seguinte forma:
 
 - **Domain**:
-  - **Entities**: Representa as entidades de domínio, como o `Movie` e `User`, que contêm apenas dados relevantes ao negócio e são agnósticas a frameworks.
+  - **Entities**: Representa as entidades de domínio, como o `Movie` e `User`, que contêm apenas dados relevantes ao negócio e são separadas dos frameworks.
   - **Repositories**: Define interfaces para os repositórios, aplicando o princípio da inversão de dependência (SOLID).
   - **UseCases**: Contém a lógica de negócios (como a criação de status de filmes, obtenção de filmes por usuário, etc.) e é responsável por orquestrar as ações do sistema.
   
@@ -37,7 +52,7 @@ Dentro do diretório `app/`, o projeto está organizado da seguinte forma:
 
 - **Adapters e Integrações**:
   - **TheMovieDbApiProvider**: Adapter responsável pela integração com a API do The Movie DB. Ele implementa a interface `MovieApiRepositoryInterface` e adapta a resposta da API para o formato esperado pelo sistema.
-  - O sistema foi construído de forma a permitir a adição de novos provedores de API, bastando implementar a interface de `MovieApiRepositoryInterface`.
+  - O sistema foi construído de forma a permitir a adição de novos provedores de API, bastando implementar a interface de `MovieApiRepositoryInterface` seguindo o strategy pattern, desta forma desativa um e ativa outro, ou o usuário poderia escolher qual utilizar, se existisse mais de uma integração, pois a interface exige que o tipo de entrada e de retorno seja o mesmo.
 
 ### Padrões Utilizados:
 
@@ -106,7 +121,7 @@ ou
 docker-compose up --build
 ```
 
-2. Atualize o `.env` e preencha as variáveis de ambiente necessárias, como a chave da API para o **The Movie DB**: THE_MOVIE_DB_API_KEY (deixei a minha como exemplo, caso não tenham cadastro na plataforma).
+2. Atualize o `.env` e preencha as variáveis de ambiente necessárias, como a chave da API para o **The Movie DB**: THE_MOVIE_DB_API_KEY (deixei a minha como exemplo, caso não tenham cadastro na plataforma ela pode ser utilizada).
 
 #### Executando a Aplicação
 - Após a instalação e configuração, a aplicação estará disponível em:
