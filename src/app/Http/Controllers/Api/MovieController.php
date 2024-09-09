@@ -6,6 +6,7 @@ use App\Domain\UseCases\Movie\CreateMovieStatusUseCase;
 use App\Domain\UseCases\Movie\GetMoviesUseCase;
 use App\Domain\UseCases\Movie\updateMovieStatusUseCase;
 use App\Domain\UseCases\Movie\GetUserMoviesUseCase;
+use App\Domain\UseCases\Movie\GetMovieDetailsUseCase;
 use App\Dtos\UpdateMovieStatusDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Movie\StoreMovieRequest;
@@ -20,7 +21,8 @@ class MovieController extends Controller
         protected GetMoviesUseCase $getMoviesUseCase,
         protected CreateMovieStatusUseCase $createMovieStatusUseCase,
         protected updateMovieStatusUseCase $updateUserMovieStatusUseCase,
-        protected GetUserMoviesUseCase $getUserMoviesUseCase
+        protected GetUserMoviesUseCase $getUserMoviesUseCase,
+        protected GetMovieDetailsUseCase $getMovieDetailsUseCase
     ) {}
 
     public function index(Request $request): JsonResponse

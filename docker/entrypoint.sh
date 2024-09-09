@@ -8,7 +8,7 @@ if [ -d /var/lib/postgresql/data ]; then
   chown -R postgres:postgres /var/lib/postgresql/data
   chmod -R 777 /var/lib/postgresql/data
 fi
-
+cp .env.example .env
 # Verifica se o arquivo composer.json existe
 if [ ! -f composer.json ]; then
   echo "Creating new Laravel project"
