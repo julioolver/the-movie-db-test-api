@@ -89,9 +89,15 @@ class MovieEloquentRepository extends BaseEloquentRepository implements MovieRep
 
     function getPersistedMoviesForUser($user)
     {
-        $persistedMovies = $user->movies()->get();
+        $allMovies = $this->eloquentModel->all();
 
-        return $persistedMovies->map(function ($movie) {
+        $userMovies = $user->movies()->withPivot(['watched', 'favorite', 'watch_later'])->get();
+
+        $userMoviesMap = $userMovies->keyBy('id');
+
+        return $allMovies->map(function ($movie) use ($userMoviesMap) {
+            $userMovie = $userMoviesMap->get($movie->id);
+
             return [
                 'id' => $movie->id,
                 'internal_id' => $movie->id,
@@ -103,9 +109,9 @@ class MovieEloquentRepository extends BaseEloquentRepository implements MovieRep
                 'synopsis' => $movie->synopsis,
                 'duration' => $movie->duration,
                 'year' => $movie->year,
-                'watched' => $movie->pivot->watched ?? false,
-                'favorite' => $movie->pivot->favorite ?? false,
-                'watch_later' => $movie->pivot->watch_later ?? false,
+                'watched' => $userMovie ? $userMovie->pivot->watched : false,
+                'favorite' => $userMovie ? $userMovie->pivot->favorite : false,
+                'watch_later' => $userMovie ? $userMovie->pivot->watch_later : false,
             ];
         })->toArray();
     }
