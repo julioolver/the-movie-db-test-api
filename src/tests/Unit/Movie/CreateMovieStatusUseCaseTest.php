@@ -3,6 +3,7 @@
 namespace Tests\Unit\Movie;
 
 use App\Domain\Entities\User;
+use App\Domain\Repositories\MovieApiRepositoryInterface;
 use App\Domain\Repositories\MovieRepositoryInterface;
 use App\Domain\Repositories\UserRepositoryInterface;
 use App\Domain\UseCases\Movie\CreateMovieStatusUseCase;
@@ -19,6 +20,7 @@ class CreateMovieStatusUseCaseTest extends TestCase
     protected UserRepositoryInterface $userRepository;
     protected CreateMovieStatusUseCase $useCase;
     protected MovieCacheService $movieCacheService;
+    protected MovieApiRepositoryInterface $movieApiRepository;
 
     protected function setUp(): void
     {
@@ -27,11 +29,13 @@ class CreateMovieStatusUseCaseTest extends TestCase
         $this->movieRepository = Mockery::mock(MovieRepositoryInterface::class);
         $this->userRepository = Mockery::mock(UserRepositoryInterface::class);
         $this->movieCacheService = Mockery::mock(MovieCacheService::class);
+        $this->movieApiRepository = Mockery::mock(MovieApiRepositoryInterface::class);
 
         $this->useCase = new CreateMovieStatusUseCase(
             $this->movieRepository,
             $this->userRepository,
-            $this->movieCacheService
+            $this->movieCacheService,
+            $this->movieApiRepository
         );
     }
 
@@ -51,8 +55,8 @@ class CreateMovieStatusUseCaseTest extends TestCase
             duration: 120,
             year: 2010,
             posterPath: '/poster.jpg',
-            isWatched: true,
-            isFavorite: true,
+            watched: true,
+            favorite: true,
             watchLater: false
         );
 
@@ -75,8 +79,8 @@ class CreateMovieStatusUseCaseTest extends TestCase
             ->shouldReceive('createUserMovieStatus')
             ->once()
             ->with($user, $movie, [
-                'watched' => $dto->isWatched,
-                'favorite' => $dto->isFavorite,
+                'watched' => $dto->watched,
+                'favorite' => $dto->favorite,
                 'watch_later' => $dto->watchLater
             ]);
 

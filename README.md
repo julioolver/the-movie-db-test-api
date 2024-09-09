@@ -49,6 +49,31 @@ Dentro do diretório `app/`, o projeto está organizado da seguinte forma:
 
 - **Repository Pattern**: Padrão de repositório foi utilizado para abstrair o acesso a dados. Isso permite a troca de implementação de persistência sem impacto na lógica de negócios.
 
+## Endpoints Principais
+Aqui estão os principais endpoints da API:
+
+- **POST /api/auth/login**: Realiza a autenticação do usuário.
+- **POST /api/auth/register**: Registra um novo usuário.
+- **POST /api/auth/refresh**: Atualiza o token JWT.
+- **GET /api/movies**: Lista todos os filmes.
+- **GET /api/user/movies**: Lista todos os filmes do usuário.
+- **POST /api/movies**: Adiciona um novo filme.
+- **PUT /api/movies/{id}/status**: Atualiza o status do filme (assistido, favorito, etc.).
+
+## Importar Collection do Insomnia
+
+Para facilitar os testes dos endpoints, você pode importar a collection do Insomnia fornecida.
+
+### Instruções para Importar:
+
+1. Baixe a [Collection do Insomnia](/home/julio/Documentos/Insomnia_2024-09-09_the_movie_db.json).
+2. Abra o Insomnia e vá até o menu **Application** > **Preferences** > **Data** > **Import Data** > **From File**.
+3. Selecione o arquivo `filmes-collection.json` que você acabou de baixar.
+4. Após importar, você terá acesso a todos os endpoints e exemplos de requisições já configurados para testar a API.
+
+---
+
+
 ### Configuração e Instalação
 
 #### Pré-requisitos
