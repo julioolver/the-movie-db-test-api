@@ -15,6 +15,18 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * @OA\Info(
+ *      version="1.0.0",
+ *      title="Documentação da API",
+ *      description="API para gerenciar filmes e usuários",
+ * )
+ *
+ * @OA\Server(
+ *      url=L5_SWAGGER_CONST_HOST,
+ *      description="Servidor da API"
+ * )
+ */
 class MovieController extends Controller
 {
     public function __construct(
@@ -25,6 +37,23 @@ class MovieController extends Controller
         protected GetMovieDetailsUseCase $getMovieDetailsUseCase
     ) {}
 
+    /**
+     * @OA\Get(
+     *     path="/api/movies",
+     *     tags={"Filmes"},
+     *     summary="Listar todos os filmes",
+     *     description="Retorna uma lista de filmes",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Sucesso",
+     *         @OA\JsonContent(
+     *              type="array",
+     *              @OA\Items(ref="#/components/schemas/Movie")
+     *         ),
+     *     ),
+     *     @OA\Response(response=401, description="Não autorizado")
+     * )
+     */
     public function index(Request $request): JsonResponse
     {
         try {
@@ -42,6 +71,31 @@ class MovieController extends Controller
         }
     }
 
+
+    /**
+     * @OA\Post(
+     *     path="/api/movies",
+     *     summary="Create a new movie",
+     *     tags={"Filmes"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/Movie")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Movie created successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Movie created successfully"),
+     *             @OA\Property(property="data", ref="#/components/schemas/Movie")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid input"
+     *     )
+     * )
+     */
     public function store(StoreMovieRequest $request): JsonResponse
     {
         try {
@@ -67,6 +121,30 @@ class MovieController extends Controller
         }
     }
 
+    /**
+     * @OA\Put(
+     *     path="/api/movies",
+     *     summary="Update movie status",
+     *     tags={"Filmes"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/Movie")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Movie status updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Movie status updated successfully"),
+     *             @OA\Property(property="data", ref="#/components/schemas/Movie")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid input"
+     *     )
+     * )
+     */
     public function updateStatus(Request $request, int $movieId): JsonResponse
     {
         try {

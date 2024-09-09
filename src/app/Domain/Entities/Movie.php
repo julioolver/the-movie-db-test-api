@@ -2,6 +2,24 @@
 
 namespace App\Domain\Entities;
 
+/**
+ * @OA\Schema(
+ *     schema="Movie",
+ *     type="object",
+ *     title="Movie",
+ *     description="Representação de um filme",
+ *     required={"title", "year"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="title", type="string", example="O Poderoso Chefão"),
+ *     @OA\Property(property="year", type="string", example="1972"),
+ *     @OA\Property(property="director", type="string", example="Francis Ford Coppola"),
+ *     @OA\Property(property="synopsis", type="string", example="A história da família Corleone..."),
+ *     @OA\Property(property="poster_path", type="string", example="/path/to/poster.jpg"),
+ *     @OA\Property(property="watched", type="boolean", example=false),
+ *     @OA\Property(property="favorite", type="boolean", example=false),
+ *     @OA\Property(property="watch_later", type="boolean", example=false),
+ * )
+ */
 class Movie
 {
     private ?int $id;
