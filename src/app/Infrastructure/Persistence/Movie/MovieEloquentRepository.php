@@ -7,7 +7,6 @@ use App\Domain\Entities\User;
 use App\Domain\Repositories\MovieRepositoryInterface;
 use App\Infrastructure\Persistence\BaseEloquentRepository;
 use App\Models\Movie as MovieEloquent;
-use Illuminate\Support\Facades\Auth;
 
 class MovieEloquentRepository extends BaseEloquentRepository implements MovieRepositoryInterface
 {
@@ -23,7 +22,17 @@ class MovieEloquentRepository extends BaseEloquentRepository implements MovieRep
     {
         $movie = $this->findEloquentModelById($id);
 
-        return $movie ? new Movie($movie->externalId, $movie->provider, $movie->title, $movie->director, $movie->synopsis, $movie->duration, $movie->year, $movie->posterPath) : null;
+        return $movie ? new Movie(
+            id: $movie->id,
+            externalId: $movie->external_id,
+            provider: $movie->provider,
+            title: $movie->title,
+            director: $movie->director,
+            synopsis: $movie->synopsis,
+            duration: $movie->duration,
+            year: $movie->year,
+            posterPath: $movie->poster_path
+        ) : null;
     }
 
     public function findByExternalId(string $externalId): ?Movie
@@ -53,11 +62,23 @@ class MovieEloquentRepository extends BaseEloquentRepository implements MovieRep
 
         return $movie;
     }
-    public function createUserMovieStatus(User $user, Movie $movie, array $status): void
+
+    public function updateUserMovieStatus(User $user, Movie $movie, array $status): void
+    {
+        $movie = $this->findEloquentModelById($movie->getId());
+
+        $movie->users()->syncWithoutDetaching([
+            $user->getId() => $status
+        ]);
+    }
+
+    public function createUserMovieStatus(User $user, Movie $movie, array $status)
     {
         $movie = $this->findEloquentModelById($movie->getId());
 
         $movie->users()->attach($user->getId(), $status);
+
+        return $movie;
     }
 
     function getPersistedMoviesForUser($user)

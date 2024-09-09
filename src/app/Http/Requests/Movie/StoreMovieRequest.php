@@ -26,13 +26,13 @@ class StoreMovieRequest extends FormRequest
             'provider' => ['required', 'string', 'max:255'],
             'title' => ['required', 'string', 'max:255'],
             'director' => ['nullable', 'string', 'max:255'],
-            'synopsis' => ['nullable', 'string', 'max:255'],
+            'synopsis' => ['nullable', 'string'],
             'duration' => ['nullable', 'string', 'max:10'],
-            'year' => ['nullable', 'string', 'max:4'],
+            'year' => ['nullable', 'string'],
             'rating' => ['nullable', 'string', 'max:255'],
             'poster_path' => ['nullable', 'string', 'max:255'],
-            'is_watched' => ['required', 'boolean'],
-            'is_favorite' => ['required', 'boolean'],
+            'watched' => ['required', 'boolean'],
+            'favorite' => ['required', 'boolean'],
             'watch_later' => ['required', 'boolean'],
         ];
     }

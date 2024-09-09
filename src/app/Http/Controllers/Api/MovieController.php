@@ -4,16 +4,22 @@ namespace App\Http\Controllers\Api;
 
 use App\Domain\UseCases\Movie\CreateMovieStatusUseCase;
 use App\Domain\UseCases\Movie\GetMoviesUseCase;
+use App\Domain\UseCases\Movie\updateMovieStatusUseCase;
 use App\Dtos\UpdateMovieStatusDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Movie\StoreMovieRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Support\Facades\Auth;
 
 class MovieController extends Controller
 {
-    public function __construct(protected GetMoviesUseCase $getMoviesUseCase, protected CreateMovieStatusUseCase $createMovieStatusUseCase) {}
+    public function __construct(
+        protected GetMoviesUseCase $getMoviesUseCase,
+        protected CreateMovieStatusUseCase $createMovieStatusUseCase,
+        protected updateMovieStatusUseCase $updateUserMovieStatusUseCase
+    ) {}
 
     public function index(Request $request): JsonResponse
     {
@@ -44,18 +50,37 @@ class MovieController extends Controller
                 duration: $request->input('duration'),
                 year: $request->input('year'),
                 posterPath: $request->input('poster_path'),
-                isWatched: $request->input('is_watched', false),
-                isFavorite: $request->input('is_favorite', false),
+                watched: $request->input('watched', false),
+                favorite: $request->input('favorite', false),
                 watchLater: $request->input('watch_later', false)
             );
 
-            $this->createMovieStatusUseCase->execute($movie);
+            $createdMovie = $this->createMovieStatusUseCase->execute($movie);
 
-            return response()->json([
-                'message' => 'Movie created successfully'
-            ], HttpResponse::HTTP_CREATED);
+            return response()->json(['movie' => $createdMovie], HttpResponse::HTTP_CREATED);
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function updateStatus(Request $request, int $movieId): JsonResponse
+    {
+        try {
+            $user = Auth::user();
+
+            $validatedData = $request->validate([
+                'watched' => 'required|boolean',
+                'favorite' => 'required|boolean',
+                'watch_later' => 'required|boolean',
+            ]);
+
+            $this->updateUserMovieStatusUseCase->execute($user->id, $movieId, $validatedData);
+
+            return response()->json(['message' => 'Status do filme atualizado com sucesso.']);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

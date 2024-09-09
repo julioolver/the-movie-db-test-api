@@ -55,6 +55,7 @@ class TheMovieDbApiProvider implements MovieApiRepositoryInterface
             $persistedStatus = $persistedMovies[$movie['id']] ?? [];
 
             return [
+                'internal_id' => $movie['internal_id'] ?? null,
                 'external_id' => $movie['id'],
                 'title' => $movie['title'],
                 'provider' => 'the-movie-db',

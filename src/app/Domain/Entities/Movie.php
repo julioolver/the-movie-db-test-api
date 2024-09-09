@@ -11,7 +11,7 @@ class Movie
     private ?string $director;
     private ?string $synopsis;
     private ?int $duration;
-    private ?int $year;
+    private ?string $year;
     private ?string $posterPath;
 
     public function __construct(
@@ -22,7 +22,7 @@ class Movie
         ?string $director = null,
         ?string $synopsis = null,
         ?int $duration = null,
-        ?int $year = null,
+        ?string $year = null,
         ?string $posterPath = null
     ) {
         $this->id = $id;

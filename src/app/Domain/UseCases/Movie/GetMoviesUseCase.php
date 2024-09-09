@@ -28,6 +28,8 @@ class GetMoviesUseCase
                 'watched' => $movie->pivot->watched,
                 'favorite' => $movie->pivot->favorite,
                 'watch_later' => $movie->pivot->watch_later,
+                'internal_id' => $movie->id,
+                'in_db' => true
             ];
         }
 
