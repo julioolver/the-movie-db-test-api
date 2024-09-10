@@ -1,3 +1,4 @@
+
 <?php
 
 namespace Tests\Unit\Movie;
@@ -43,7 +44,7 @@ class CreateMovieStatusUseCaseTest extends TestCase
     {
         Auth::shouldReceive('id')->andReturn(1);
 
-        $user = new User(7, 'John Doe', 'john@example.com');
+        $user = new User(Auth::id(), 'john', 'john@example.com');
         $movie = Movie::factory()->makeMovie();
 
         $dto = new UpdateMovieStatusDto(
@@ -60,9 +61,15 @@ class CreateMovieStatusUseCaseTest extends TestCase
             watchLater: false
         );
 
+        $this->movieApiRepository
+            ->shouldReceive('providesFullMovieDetails')
+            ->once()
+            ->andReturn(true);
+
         $this->movieRepository
             ->shouldReceive('findByExternalId')
             ->with($dto->externalId)
+            ->once()
             ->andReturn(null);
 
         $this->movieRepository
@@ -72,7 +79,7 @@ class CreateMovieStatusUseCaseTest extends TestCase
 
         $this->userRepository
             ->shouldReceive('findById')
-            ->with(7)
+            ->with($user->getId())
             ->andReturn($user);
 
         $this->movieRepository
@@ -87,7 +94,7 @@ class CreateMovieStatusUseCaseTest extends TestCase
         $this->movieCacheService
             ->shouldReceive('clearUserMoviesCache')
             ->once()
-            ->with(7);
+            ->with($user->getId());
 
         $this->useCase->execute($dto);
 
